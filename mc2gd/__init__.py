@@ -1,1 +1,1 @@
-from mc2gd.mc2gd import *
+from .mc2gj import mc2geojson

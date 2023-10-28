@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "mc2gd"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["itch <marine.taichi@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.5"
 
 
 [build-system]

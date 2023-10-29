@@ -1,3 +1,4 @@
+import json
 import pytest
 
 from jismeshcode.jismeshcode import mc2geojson
@@ -29,7 +30,7 @@ from jismeshcode.jismeshcode import mc2geojson
 def test_mc2geojson(geojson):
     meshcode = geojson['properties']['meshcode']
     result = mc2geojson(meshcode)
-    assert result == geojson
+    assert result == json.dumps(geojson)
 
 
 def test_invalid_input():

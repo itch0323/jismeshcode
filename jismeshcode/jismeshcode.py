@@ -1,3 +1,4 @@
+import json
 from typing import Union
 
 VALID_MESH_CODE_LENGTH = (4, 6, 8, 9, 10, 11)
@@ -77,4 +78,4 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
         }
     }
     
-    return geojson
+    return json.dumps(geojson)

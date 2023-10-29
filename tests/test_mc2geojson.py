@@ -39,3 +39,12 @@ def test_invalid_input():
         mc2geojson('')
     with pytest.raises(TypeError):
         mc2geojson(None)
+
+
+def test_invalid_meshcode():
+    with pytest.raises(ValueError):
+        mc2geojson('1')  # メッシュコードは4桁以上
+    with pytest.raises(ValueError):
+        mc2geojson('12')  # メッシュコードは4桁以上
+    with pytest.raises(ValueError):
+        mc2geojson('123')  # メッシュコードは4桁以上

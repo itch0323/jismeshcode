@@ -1,5 +1,7 @@
 # jismeshcode
 
+[English version](README_en.md)
+
 ## このライブラリは
 
 - 地域メッシュコードを操作するライブラリです

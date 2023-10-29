@@ -27,6 +27,6 @@ pip install jismeshcode
 
 ```Python
 >>> from jismeshcode.jismeshcode import mc2geojson
->>> mc2geojson(5438)
-{'type': 'Feature', 'geometry': {'type': 'Polygon', 'coordinates': [[[138, 36.0], [139, 36.0], [139, 36.666666666666664], [138, 36.666666666666664], [138, 36.0]]]}, 'properties': {'meshcode': '5438'}}
+>>> mc2geojson(5439)
+'{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[139, 36.0], [140, 36.0], [140, 36.666666666666664], [139, 36.666666666666664], [139, 36.0]]]}, "properties": {"meshcode": "5439"}}'
 ```

@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "mc2gd"
-version = "0.1.4"
+name = "jismeshcode"
+version = "0.1.0"
 description = ""
 authors = ["itch <marine.taichi@gmail.com>"]
 readme = "README.md"

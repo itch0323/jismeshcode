@@ -3,7 +3,15 @@ from typing import Union
 
 VALID_MESH_CODE_LENGTH = (4, 6, 8, 9, 10, 11)
 
+
+def normalize_meshcode(meshcode):
+    return ''.join(filter(lambda x: x.isdigit(), meshcode))
+
 def mc2geojson(meshcode: Union[str, int]) -> str:
+
+    if isinstance(meshcode, str):
+        meshcode = normalize_meshcode(meshcode)
+
     # Convert meshcode to string if it's an integer
     if isinstance(meshcode, int):
         meshcode = str(meshcode)

@@ -7,8 +7,8 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
 
     # Check the length of the meshcode to determine the mesh level
     mesh_level = len(meshcode)
-    if mesh_level < 6:
-        raise ValueError("meshcode length must be at least 6")
+    if mesh_level < 4:
+        raise ValueError("meshcode length must be at least 4")
     # Extract base latitude and longitude from the meshcode
     south_latitude = int(meshcode[:2]) / 1.5
     west_longitude = 100 + int(meshcode[2:4])

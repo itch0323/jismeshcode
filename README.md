@@ -1,4 +1,4 @@
-# jismeshcode(MeshCode)
+# jismeshcode
 
 ## このライブラリは
 - 地域メッシュコードを操作するライブラリです
@@ -18,6 +18,6 @@ pip install jismeshcode
 
 ```Python
 >>> from jismeshcode.jismeshcode import mc2geojson
->>> mc2geojson(2345)
-{'type': 'Feature', 'geometry': {'type': 'Polygon', 'coordinates': [[[145, 15.333333333333334], [146, 15.333333333333334], [146, 16.0], [145, 16.0], [145, 15.333333333333334]]]}, 'properties': {'meshcode': '2345'}}
+>>> mc2geojson(5438)
+{'type': 'Feature', 'geometry': {'type': 'Polygon', 'coordinates': [[[138, 36.0], [139, 36.0], [139, 36.666666666666664], [138, 36.666666666666664], [138, 36.0]]]}, 'properties': {'meshcode': '5438'}}
 ```

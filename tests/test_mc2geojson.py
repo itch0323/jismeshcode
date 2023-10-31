@@ -13,6 +13,9 @@ from jismeshcode.jismeshcode import mc2geojson
         # 6
         {'type': 'Feature', 'geometry': {'type': 'Polygon', 'coordinates': [[[138.375, 36.166666666666664], [
             138.5, 36.166666666666664], [138.5, 36.25], [138.375, 36.25], [138.375, 36.166666666666664]]]}, 'properties': {'meshcode': '543823'}},
+        # 7
+        {'type': 'Feature', 'geometry': {'type': 'Polygon', 'coordinates': [[[138.4375, 36.20833333333333], [
+            138.5, 36.20833333333333], [138.5, 36.24999999999999], [138.4375, 36.24999999999999], [138.4375, 36.20833333333333]]]}, 'properties': {'meshcode': '5438234'}},
         # 8
         {'type': 'Feature', 'geometry': {'type': 'Polygon', 'coordinates': [[[138.4125, 36.199999999999996], [
             138.42499999999998, 36.199999999999996], [138.42499999999998, 36.20833333333333], [138.4125, 36.20833333333333], [138.4125, 36.199999999999996]]]}, 'properties': {'meshcode': '54382343'}},
@@ -49,3 +52,11 @@ def test_invalid_meshcode():
         mc2geojson('12')  # メッシュコードは4桁以上
     with pytest.raises(ValueError):
         mc2geojson('123')  # メッシュコードは4桁以上
+    with pytest.raises(ValueError):
+        mc2geojson('543829')  # 2次メッシュコードの末尾が取りうる値は1から8
+    with pytest.raises(ValueError):
+        mc2geojson('543823435')  # 4次メッシュコードの末尾が取りうる値は1から4
+    with pytest.raises(ValueError):
+        mc2geojson('5438234355')  # 5次メッシュコードの末尾が取りうる値は1から4
+    with pytest.raises(ValueError):
+        mc2geojson('54382343555')  # 6次メッシュコードの末尾が取りうる値は1から4

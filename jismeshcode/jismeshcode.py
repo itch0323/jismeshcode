@@ -1,7 +1,7 @@
 import json
 from typing import Union
 
-VALID_MESH_CODE_LENGTH = (4, 6, 8, 9, 10, 11)
+VALID_MESH_CODE_LENGTH = (4, 6, 7, 8, 9, 10, 11)
 
 
 def normalize_meshcode(meshcode):
@@ -31,11 +31,23 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
     delta_longitude = 1  # 1 degree
     
     if mesh_level >= 6:  # Apply adjustments for second order mesh
+        if not (1 <= int(meshcode[4]) <= 8) or not (1 <= int(meshcode[5]) <= 8):
+            raise ValueError(f"meshcode number error number:fourth and fifth number of meshcode must be from 1 to 8")
+    
         delta_latitude = 1/12
         delta_longitude = 1/8
         south_latitude += int(meshcode[4]) * delta_latitude
         west_longitude += int(meshcode[5]) * delta_longitude
+
+    if mesh_level == 7:  # Apply adjustments for second order mesh
+        if not 1 <= int(meshcode[6]) <= 4:
+            raise ValueError(f"meshcode number error number:The range of number in last number of forth meshcode must be from 1 to 4")
         
+        delta_latitude = 1/24
+        delta_longitude = 1/16
+        south_latitude += [None, 0, 0, delta_latitude, delta_latitude][int(meshcode[6])]
+        west_longitude += [None, 0, delta_longitude, 0, delta_longitude][int(meshcode[6])]
+
     if mesh_level >= 8:  # Apply adjustments for third order mesh
         delta_latitude = 1/120
         delta_longitude = 3/240
@@ -44,7 +56,7 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
         
     if mesh_level >= 9:  # Apply adjustments for fourth order mesh
         if not int(meshcode[8]) in [1, 2, 3, 4]:
-            raise ValueError(f"meshcode number error last number:The range of numbers in last number of forth meshcode must be from 1 to 4")
+            raise ValueError(f"meshcode number error last number:The range of number in last number of forth meshcode must be from 1 to 4")
         
         delta_latitude = 15/3600
         delta_longitude = 22.5/3600
@@ -53,7 +65,7 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
 
     if mesh_level >= 10:  # Apply adjustments for fifth order mesh
         if not int(meshcode[8]) in [1, 2, 3, 4]:
-            raise ValueError(f"meshcode number error last number:The range of numbers in last number of forth meshcode must be from 1 to 4")
+            raise ValueError(f"meshcode number error last number:The range of number in last number of forth meshcode must be from 1 to 4")
        
         delta_latitude = 7.5/3600  # 7.5 seconds in degrees
         delta_longitude = 11.25/3600  # 11.25 seconds in degrees
@@ -62,7 +74,7 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
         
     if mesh_level == 11:  # Apply adjustments for sixth order mesh
         if not int(meshcode[8]) in [1, 2, 3, 4]:
-            raise ValueError(f"meshcode number errorh last number:The range of numbers in last number of forth meshcode must be from 1 to 4")
+            raise ValueError(f"meshcode number errorh last number:The range of number in last number of forth meshcode must be from 1 to 4")
        
         delta_latitude = 3.75/3600  # 3.75 seconds in degrees
         delta_longitude = 5.625/3600  # 5.625 seconds in degrees

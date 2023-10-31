@@ -1,4 +1,5 @@
 import json
+import math
 from typing import Union
 
 VALID_MESH_CODE_LENGTH = (4, 6, 8, 9, 10, 11)
@@ -93,3 +94,50 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
     }
     
     return json.dumps(geojson)
+
+def latlon2mc(lat: float, lon: float, mesh_level: int = 8):
+    if(not(mesh_level in VALID_MESH_CODE_LENGTH)):
+        raise ValueError(f"meshcode type error:{mesh_level} meshcode type must be within {VALID_MESH_CODE_LENGTH}")
+
+    remain_lat = lat * 3 / 2
+    remain_lon = lon - 100
+    flat = math.floor(remain_lat)
+    flon = math.floor(remain_lon)
+    mc = str(flat)[0:2] + str(flon)[0:2]
+
+    if mesh_level >= 6:
+        remain_lat = 8*(remain_lat - flat)
+        remain_lon = 8*(remain_lon - flon)
+        flat = math.floor(remain_lat)
+        flon = math.floor(remain_lon)
+        mc = mc[0:4] + str(flat)[-1] + str(flon)[-1]
+
+    if mesh_level >= 8:
+        remain_lat = 10*(remain_lat - flat)
+        remain_lon = 10*(remain_lon - flon)
+        flat = math.floor(remain_lat)
+        flon = math.floor(remain_lon)
+        mc = mc[0:6] + str(flat)[-1] + str(flon)[-1]
+ 
+    if mesh_level >= 9:
+        remain_lat = 2*(remain_lat - flat)
+        remain_lon = 2*(remain_lon - flon)
+        flat = math.floor(remain_lat)
+        flon = math.floor(remain_lon)
+        mc = mc[0:8] + str(flat*2 + 1 + flon)
+ 
+    if mesh_level >= 10:
+        remain_lat = 2*(remain_lat - flat)
+        remain_lon = 2*(remain_lon - flon)
+        flat = math.floor(remain_lat)
+        flon = math.floor(remain_lon)
+        mc = mc[0:9] + str(flat*2 + 1 + flon)
+ 
+    if mesh_level >= 11:
+        remain_lat = 2*(remain_lat - flat)
+        remain_lon = 2*(remain_lon - flon)
+        flat = math.floor(remain_lat)
+        flon = math.floor(remain_lon)
+        mc = mc[0:10] + str(flat*2 + 1 + flon)
+ 
+    return mc

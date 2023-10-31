@@ -32,7 +32,7 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
     
     if mesh_level >= 6:  # Apply adjustments for second order mesh
         if not (1 <= int(meshcode[4]) <= 8) or not (1 <= int(meshcode[5]) <= 8):
-            raise ValueError(f"meshcode number error number:fourth and fifth number of meshcode must be from 1 to 8")
+            raise ValueError(f"meshcode number error number:Fourth and fifth number of meshcode must be from 1 to 8")
     
         delta_latitude = 1/12
         delta_longitude = 1/8
@@ -54,14 +54,22 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
         south_latitude += int(meshcode[6]) * delta_latitude
         west_longitude += int(meshcode[7]) * delta_longitude
         
-    if mesh_level >= 9:  # Apply adjustments for fourth order mesh
-        if not int(meshcode[8]) in [1, 2, 3, 4]:
-            raise ValueError(f"meshcode number error last number:The range of number in last number of forth meshcode must be from 1 to 4")
+    if mesh_level == 9:  # Apply adjustments for fourth order mesh
+        if not 1 <= int(meshcode[8]) <= 5:
+            raise ValueError(f"meshcode number error last number:The range of number in last number of forth meshcode must be from 1 to 5")
         
-        delta_latitude = 15/3600
-        delta_longitude = 22.5/3600
-        south_latitude += [None, 0, 0, delta_latitude, delta_latitude][int(meshcode[8])]
-        west_longitude += [None, 0, delta_longitude, 0, delta_longitude][int(meshcode[8])]
+        if not int(meshcode[8]) == 5:
+            delta_latitude = 15/3600
+            delta_longitude = 22.5/3600
+            south_latitude += [None, 0, 0, delta_latitude, delta_latitude][int(meshcode[8])]
+            west_longitude += [None, 0, delta_longitude, 0, delta_longitude][int(meshcode[8])]
+        elif int(meshcode[6])%2 == 1 or int(meshcode[7])%2 == 1:
+            raise ValueError(f"meshcode number error number:Sevens and eighth number of meshcode must be even")
+        else:
+            delta_latitude = 1/60
+            delta_longitude = 1/40
+            south_latitude += int(meshcode[6]) * delta_latitude
+            west_longitude += int(meshcode[7]) * delta_longitude
 
     if mesh_level >= 10:  # Apply adjustments for fifth order mesh
         if not int(meshcode[8]) in [1, 2, 3, 4]:

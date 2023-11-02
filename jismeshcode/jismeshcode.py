@@ -8,8 +8,7 @@ VALID_MESH_CODE_LENGTH = (4, 6, 7, 8, 9, 10, 11)
 def normalize_meshcode(meshcode):
     return ''.join(filter(lambda x: x.isdigit(), meshcode))
 
-def mc2geojson(meshcode: Union[str, int]) -> str:
-
+def mc2coordinates(meshcode: Union[str, int]) -> str:
     if isinstance(meshcode, str):
         meshcode = normalize_meshcode(meshcode)
 
@@ -35,40 +34,40 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
         if not (1 <= int(meshcode[4]) <= 8) or not (1 <= int(meshcode[5]) <= 8):
             raise ValueError(f"meshcode number error number:Fourth and fifth number of meshcode must be from 1 to 8")
     
-        delta_latitude = 1/12
-        delta_longitude = 1/8
+        delta_latitude = 1/12 # 5 minutes in degrees
+        delta_longitude = 1/8 # 7.5 minutes in degrees
         south_latitude += int(meshcode[4]) * delta_latitude
         west_longitude += int(meshcode[5]) * delta_longitude
 
-    if mesh_level == 7:  # Apply adjustments for second order mesh
+    if mesh_level == 7:  # Apply adjustments for five times regional mesh
         if not 1 <= int(meshcode[6]) <= 4:
             raise ValueError(f"meshcode number error number:The range of number in last number of forth meshcode must be from 1 to 4")
         
-        delta_latitude = 1/24
-        delta_longitude = 1/16
+        delta_latitude = 1/24 # 2.5 minutes in degrees
+        delta_longitude = 1/16 # 3.75 minutes in degrees
         south_latitude += [None, 0, 0, delta_latitude, delta_latitude][int(meshcode[6])]
         west_longitude += [None, 0, delta_longitude, 0, delta_longitude][int(meshcode[6])]
 
     if mesh_level >= 8:  # Apply adjustments for third order mesh
-        delta_latitude = 1/120
-        delta_longitude = 3/240
+        delta_latitude = 1/120 # 30 seconds in degrees
+        delta_longitude = 3/240 # 45 seconds in degrees
         south_latitude += int(meshcode[6]) * delta_latitude
         west_longitude += int(meshcode[7]) * delta_longitude
         
-    if mesh_level == 9:  # Apply adjustments for fourth order mesh
+    if mesh_level == 9:  # Apply adjustments for fourth order or two times mesh
         if not 1 <= int(meshcode[8]) <= 5:
             raise ValueError(f"meshcode number error last number:The range of number in last number of forth meshcode must be from 1 to 5")
         
-        if not int(meshcode[8]) == 5:
-            delta_latitude = 15/3600
-            delta_longitude = 22.5/3600
+        if not int(meshcode[8]) == 5: # Apply adjustments for fourth order mesh
+            delta_latitude = 15/3600 # 15 seconds in degrees
+            delta_longitude = 22.5/3600 # 22.5 seconds in degrees
             south_latitude += [None, 0, 0, delta_latitude, delta_latitude][int(meshcode[8])]
             west_longitude += [None, 0, delta_longitude, 0, delta_longitude][int(meshcode[8])]
         elif int(meshcode[6])%2 == 1 or int(meshcode[7])%2 == 1:
             raise ValueError(f"meshcode number error number:Sevens and eighth number of meshcode must be even")
-        else:
-            delta_latitude = 1/60
-            delta_longitude = 1/40
+        elif len(meshcode) == 9: # Apply adjustments for two times mesh
+            delta_latitude = 1/60 # 1 minutes in degrees
+            delta_longitude = 1/40 # 1.41 minutes in degrees
             south_latitude += int(meshcode[6]) * delta_latitude
             west_longitude += int(meshcode[7]) * delta_longitude
 
@@ -100,13 +99,16 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
             [west_longitude, south_latitude]  # Close the loop
         ]
     ]
+    return coordinates
+
+def mc2geojson(meshcode: Union[str, int]) -> str:
     
     # Construct the GeoJSON
     geojson = {
         "type": "Feature",
         "geometry": {
             "type": "Polygon",
-            "coordinates": coordinates
+            "coordinates": mc2coordinates(meshcode)
         },
         "properties": {
             "meshcode": meshcode

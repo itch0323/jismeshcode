@@ -1,6 +1,6 @@
 import json
 import math
-from typing import Union
+from typing import Union, Optional
 
 VALID_MESH_CODE_LENGTH = (4, 6, 7, 8, 9, 10, 11)
 
@@ -31,8 +31,8 @@ def mc2coordinates(meshcode: Union[str, int]) -> str:
     delta_longitude = 1  # 1 degree
     
     if mesh_level >= 6:  # Apply adjustments for second order mesh
-        if not (1 <= int(meshcode[4]) <= 8) or not (1 <= int(meshcode[5]) <= 8):
-            raise ValueError(f"meshcode number error number:Fourth and fifth number of meshcode must be from 1 to 8")
+        if not (0 <= int(meshcode[4]) <= 7) or not (0 <= int(meshcode[5]) <= 7):
+            raise ValueError(f"meshcode number error number:Fourth and fifth number of meshcode must be from 0 to 7")
     
         delta_latitude = 1/12 # 5 minutes in degrees
         delta_longitude = 1/8 # 7.5 minutes in degrees
@@ -72,7 +72,7 @@ def mc2coordinates(meshcode: Union[str, int]) -> str:
             west_longitude += int(meshcode[7]) * delta_longitude
 
     if mesh_level >= 10:  # Apply adjustments for fifth order mesh
-        if not int(meshcode[8]) in [1, 2, 3, 4]:
+        if not int(meshcode[9]) in [1, 2, 3, 4]:
             raise ValueError(f"meshcode number error last number:The range of number in last number of forth meshcode must be from 1 to 4")
        
         delta_latitude = 7.5/3600  # 7.5 seconds in degrees
@@ -81,7 +81,7 @@ def mc2coordinates(meshcode: Union[str, int]) -> str:
         west_longitude += [None, 0, delta_longitude, 0, delta_longitude][int(meshcode[9])]
         
     if mesh_level == 11:  # Apply adjustments for sixth order mesh
-        if not int(meshcode[8]) in [1, 2, 3, 4]:
+        if not int(meshcode[10]) in [1, 2, 3, 4]:
             raise ValueError(f"meshcode number errorh last number:The range of number in last number of forth meshcode must be from 1 to 4")
        
         delta_latitude = 3.75/3600  # 3.75 seconds in degrees
@@ -101,8 +101,12 @@ def mc2coordinates(meshcode: Union[str, int]) -> str:
     ]
     return coordinates
 
-def mc2geojson(meshcode: Union[str, int]) -> str:
-    
+def mc2geojson(meshcode: Union[str, int], properties: Optional[dict] = None) -> str:
+    # Construct the properties dictionary
+    properties_data = {"meshcode": meshcode}
+    if properties:
+        properties_data.update(properties)
+
     # Construct the GeoJSON
     geojson = {
         "type": "Feature",
@@ -110,9 +114,7 @@ def mc2geojson(meshcode: Union[str, int]) -> str:
             "type": "Polygon",
             "coordinates": mc2coordinates(meshcode)
         },
-        "properties": {
-            "meshcode": meshcode
-        }
+        "properties": properties_data
     }
     
     return json.dumps(geojson)

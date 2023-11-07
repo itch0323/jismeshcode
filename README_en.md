@@ -28,3 +28,9 @@ pip install jismeshcode
 >>> mc2geojson(5439)
 '{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[139, 36.0], [140, 36.0], [140, 36.666666666666664], [139, 36.666666666666664], [139, 36.0]]]}, "properties": {"meshcode": "5439"}}'
 ```
+
+## latlon2mc
+- Input
+  - Latitude, Longitude, The number of digits for the mesh code you want to return (4, 6, 8, 9, 10, 11 digits)
+- Output
+  - Returns the mesh code from the latitude and longitude

@@ -34,3 +34,18 @@ pip install jismeshcode
   - Latitude, Longitude, The number of digits for the mesh code you want to return (4, 6, 8, 9, 10, 11 digits)
 - Output
   - Returns the mesh code from the latitude and longitude
+ 
+### latlon2mc
+- Input
+  - Latitude, Longitude, The number of digits for the mesh code you want to return (4, 6, 8, 9, 10, 11 digits)
+- Output
+  - Returns the mesh code from the latitude and longitude
+
+```Python
+>>> from jismeshcode.jismeshcode import latlon2mc
+>>> latlon2mc(36.2010417, 138.415625, 6)
+'543823'
+```
+
+## tutorial
+ - tutorials/jismeshcode.ipynb

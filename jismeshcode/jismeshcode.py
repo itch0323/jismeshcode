@@ -54,7 +54,7 @@ def mc2coordinates(meshcode: Union[str, int]) -> str:
         south_latitude += int(meshcode[6]) * delta_latitude
         west_longitude += int(meshcode[7]) * delta_longitude
         
-    if mesh_level == 9:  # Apply adjustments for fourth order or two times mesh
+    if mesh_level >= 9:  # Apply adjustments for fourth order or two times mesh
         if not 1 <= int(meshcode[8]) <= 5:
             raise ValueError(f"meshcode number error last number:The range of number in last number of forth meshcode must be from 1 to 5")
         
